@@ -4,10 +4,11 @@
 import re
 import codecs
 import sys
+import xlrd
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-
+import jieba
 
 
 old_file =  'old_init.txt'
@@ -53,25 +54,88 @@ def first_step():
 
 
 
-def filter_process():
-    pro_f = codecs.open('short_new.txt', 'w', 'utf-8')
-    for line in f.readlines():
-        arr = line.split("\\")
-        filtrate = re.compile(u'[^\u4E00-\u9FA50-9]')  # 非中文,非数字
-        old_str = filtrate.sub(r' ', arr[0].strip().decode('utf-8'))
-        new_str = filtrate.sub(r' ', arr[1].strip().decode('utf-8'))
+def filter_process(files):
+    cnt = 0
+    pro_f = codecs.open('all_new.txt', 'w', 'utf-8')
+    for item in files:
+        print item
+        print cnt
+        if item.endswith('txt'):
+            if item =="sjfj30000.txt":
+                for line in open(item, 'r').readlines():
+                    arr = line.split("\\")
+                    filtrate = re.compile(u'[a-zA-Z]')  # 去掉英文字符
+                    old_str = filtrate.sub(r' ', arr[0].strip().decode('utf-8'))
+                    new_str = filtrate.sub(r' ', arr[1].strip().decode('utf-8'))
 
-        old_str =old_str.encode('utf-8')
-        new_str = new_str.encode('utf-8')
-        res = old_str +" \ " +new_str+"\n"
-        if new_str == '' or old_str == '' or len(new_str) == 0 or len(old_str) == 0:
-            continue
-        pro_f.write(res)
+                    old_str = old_str.encode('utf-8')
+                    new_str = new_str.encode('utf-8')
+
+                    if new_str == '' or old_str == '' or len(new_str) == 0 or len(old_str) == 0:
+                        continue
+                    seg_list = jieba.cut(new_str, cut_all=False)
+
+                    res = old_str + " \ " + " ".join(seg_list) + "\n"
+                    cnt = cnt + 1
+                    pro_f.write(res)
+            else:
+                for line in open(item, 'r').readlines():
+                    arr = line.split("\\")
+                    filtrate = re.compile(u'[a-zA-Z]')  # 去掉英文字符
+                    old_str = filtrate.sub(r' ', arr[0].strip().decode('utf-8'))
+                    new_str = filtrate.sub(r' ', arr[1].strip().decode('utf-8'))
+
+                    old_str = old_str.encode('utf-8')
+                    new_str = new_str.encode('utf-8')
+                    res = old_str + " \ " + new_str + "\n"
+                    if new_str == '' or old_str == '' or len(new_str) == 0 or len(old_str) == 0:
+                        continue
+                    cnt = cnt + 1
+                    pro_f.write(res)
+
+
+
+        else:
+            data = xlrd.open_workbook(item)
+            table = data.sheets()[1]
+            row_num = table.nrows
+            col_num = table.ncols
+            values = []
+            for i in range(1, row_num):
+                current_val = table.row_values(i)
+                old = current_val[0]
+                new_ = current_val[2]
+                filtrate = re.compile(u'[a-zA-Z]')  # 去掉英文字符
+                old_str = filtrate.sub(r' ', old.strip().decode("utf-8").encode('utf-8'))
+                new_str = filtrate.sub(r' ', new_.strip().decode('utf-8').encode('utf-8'))
+
+
+
+
+                old_str = old_str.decode("utf-8").encode('utf-8')
+                new_str = new_str.decode("utf-8").encode('utf-8')
+
+                if new_str == '' or old_str == '' or len(new_str) == 0 or len(old_str) == 0:
+                    continue
+
+                seg_list = jieba.cut(new_str, cut_all=False)
+
+                old_str = " ".join(list(old_str.encode("utf-8").decode("utf-8")))
+
+                res = old_str + " \ " + " ".join(seg_list) + "\n"
+                cnt = cnt + 1
+                pro_f.write(res)
+
+
+
+    print cnt
+
     pro_f.flush()
     pro_f.close()
 
 
 
 if __name__ =='__main__':
-    first_step()
+    files = ['abc_new.txt','data.txt','short_data.txt','sjfj30000.txt','zuozhuan.txt','庄子数据4537句对.xlsx']
+    filter_process(files)
 
