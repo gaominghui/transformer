@@ -74,8 +74,10 @@ def filter_process(files):
                     if new_str == '' or old_str == '' or len(new_str) == 0 or len(old_str) == 0:
                         continue
                     seg_list = jieba.cut(new_str, cut_all=False)
+                    old_str = " ".join(list(old_str.encode("utf-8").decode("utf-8")))
 
                     res = old_str + " \ " + " ".join(seg_list) + "\n"
+                    print res
                     cnt = cnt + 1
                     pro_f.write(res)
             else:

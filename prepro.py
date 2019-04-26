@@ -34,20 +34,26 @@ def prepro(hp):
 
     logging.info("# Preprocessing")
     # train
+    #读入训练文件
     _prepro = lambda x:  [line.strip() for line in open(x, 'r').read().split("\n") \
                       if not line.startswith("<")]
     prepro_train1, prepro_train2 = _prepro(train1), _prepro(train2)
+    #保证英语和德语训练条数一致
     assert len(prepro_train1)==len(prepro_train2), "Check if train source and target files match."
 
     # eval
+    #读入验证集数据
     _prepro = lambda x: [re.sub("<[^>]+>", "", line).strip() \
                      for line in open(x, 'r').read().split("\n") \
                      if line.startswith("<seg id")]
     prepro_eval1, prepro_eval2 = _prepro(eval1), _prepro(eval2)
+    #保证验证集数据英语和德语一致
     assert len(prepro_eval1) == len(prepro_eval2), "Check if eval source and target files match."
 
     # test
+    #读入测试数据
     prepro_test1, prepro_test2 = _prepro(test1), _prepro(test2)
+    #保证测试集英语和德语条数一致
     assert len(prepro_test1) == len(prepro_test2), "Check if test source and target files match."
 
     logging.info("Let's see how preprocessed data look like")
@@ -63,9 +69,10 @@ def prepro(hp):
     def _write(sents, fname):
         with open(fname, 'w') as fout:
             fout.write("\n".join(sents))
-
+    #将读入的数据（部分清洗），写回
     _write(prepro_train1, "iwslt2016/prepro/train.de")
     _write(prepro_train2, "iwslt2016/prepro/train.en")
+    #将英语和德语合在一起，写回，做分词使用
     _write(prepro_train1+prepro_train2, "iwslt2016/prepro/train")
     _write(prepro_eval1, "iwslt2016/prepro/eval.de")
     _write(prepro_eval2, "iwslt2016/prepro/eval.en")
@@ -73,11 +80,15 @@ def prepro(hp):
     _write(prepro_test2, "iwslt2016/prepro/test.en")
 
     logging.info("# Train a joint BPE model with sentencepiece")
+    #新建分词目录
     os.makedirs("iwslt2016/segmented", exist_ok=True)
+    #
+    #分词参数，model_prefix 指定了保存模型是bpe.model，训练的分词模型包含英语和德语
     train = '--input=iwslt2016/prepro/train --pad_id=0 --unk_id=1 \
              --bos_id=2 --eos_id=3\
              --model_prefix=iwslt2016/segmented/bpe --vocab_size={} \
              --model_type=bpe'.format(hp.vocab_size)
+    #训练分词模型，会生成bpe.model 模型文件和bpe.vocab 字典文件
     spm.SentencePieceTrainer.Train(train)
 
     logging.info("# Load trained bpe model")
@@ -85,6 +96,7 @@ def prepro(hp):
     sp.Load("iwslt2016/segmented/bpe.model")
 
     logging.info("# Segment")
+    #分词，并写回
     def _segment_and_write(sents, fname):
         with open(fname, "w") as fout:
             for sent in sents:
@@ -97,6 +109,7 @@ def prepro(hp):
     _segment_and_write(prepro_eval2, "iwslt2016/segmented/eval.en.bpe")
     _segment_and_write(prepro_test1, "iwslt2016/segmented/test.de.bpe")
 
+    #打印分词后的结果
     logging.info("Let's see how segmented data look like")
     print("train1:", open("iwslt2016/segmented/train.de.bpe",'r').readline())
     print("train2:", open("iwslt2016/segmented/train.en.bpe", 'r').readline())

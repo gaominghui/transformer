@@ -21,8 +21,11 @@ def load_vocab(vocab_fpath):
     Returns
     two dictionaries.
     '''
+    #读词典文件，获得词
     vocab = [line.split()[0] for line in open(vocab_fpath, 'r').read().splitlines()]
+    #词到 index的映射
     token2idx = {token: idx for idx, token in enumerate(vocab)}
+    #inddex 到 词的映射
     idx2token = {idx: token for idx, token in enumerate(vocab)}
     return token2idx, idx2token
 
@@ -37,6 +40,7 @@ def load_data(fpath1, fpath2, maxlen1, maxlen2):
     sents1: list of source sents
     sents2: list of target sents
     '''
+    #读入训练数据，以句子为单位，若英语或者德语句子长度超过maxlen1,maxlen2则丢弃，不使用
     sents1, sents2 = [], []
     with open(fpath1, 'r') as f1, open(fpath2, 'r') as f2:
         for sent1, sent2 in zip(f1, f2):
@@ -56,10 +60,12 @@ def encode(inp, type, dict):
     Returns
     list of numbers
     '''
+    #将句子里中的词，转换为对应的index ，添加</s>作为一句话的结束
+    #type = 'x'表示是源语言，y 表示是目标语言
     inp_str = inp.decode("utf-8")
     if type=="x": tokens = inp_str.split() + ["</s>"]
     else: tokens = ["<s>"] + inp_str.split() + ["</s>"]
-
+    #如果字典中没有这个词，用<unk>代替
     x = [dict.get(t, dict["<unk>"]) for t in tokens]
     return x
 
@@ -80,6 +86,7 @@ def generator_fn(sents1, sents2, vocab_fpath):
         y_seqlen: int. sequence length of y
         sent2: str. target sentence
     '''
+    #对一些句子，生成对应的index 组成的句子，源语言句子和目标语言句子处理的方式不太一样
     token2idx, _ = load_vocab(vocab_fpath)
     for sent1, sent2 in zip(sents1, sents2):
         x = encode(sent1, "x", token2idx)
@@ -114,17 +121,20 @@ def input_fn(sents1, sents2, vocab_fpath, batch_size, shuffle=False):
              (tf.int32, tf.int32, tf.int32, tf.string))
     paddings = ((0, 0, ''),
                 (0, 0, 0, ''))
-
+    #使用tensorflow 的dataset 的from_generator,生成数据集
+    #使用方法可以参考api
     dataset = tf.data.Dataset.from_generator(
         generator_fn,
         output_shapes=shapes,
         output_types=types,
         args=(sents1, sents2, vocab_fpath))  # <- arguments for generator_fn. converted to np string arrays
 
+    #训练会打乱顺序
     if shuffle: # for training
         dataset = dataset.shuffle(128*batch_size)
-
+    #应用不带参数的 Dataset.repeat() 转换将无限次地重复输入
     dataset = dataset.repeat()  # iterate forever
+    #padded_batch
     dataset = dataset.padded_batch(batch_size, shapes, paddings).prefetch(1)
 
     return dataset
@@ -144,7 +154,10 @@ def get_batch(fpath1, fpath2, maxlen1, maxlen2, vocab_fpath, batch_size, shuffle
     num_batches: number of mini-batches
     num_samples
     '''
+    #获取英语和德语的句子
     sents1, sents2 = load_data(fpath1, fpath2, maxlen1, maxlen2)
+    #获取batch的训练数据
     batches = input_fn(sents1, sents2, vocab_fpath, batch_size, shuffle=shuffle)
+    #计算有多少个batch
     num_batches = calc_num_batches(len(sents1), batch_size)
     return batches, num_batches, len(sents1)

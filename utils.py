@@ -16,7 +16,9 @@ import os, re
 import logging
 
 logging.basicConfig(level=logging.INFO)
-
+#total_num :句子对
+#batch_size: 每个batch多少个句子对
+#计算一共有多少个 batch
 def calc_num_batches(total_num, batch_size):
     '''Calculates the number of batches.
     total_num: total sample number
@@ -26,6 +28,9 @@ def calc_num_batches(total_num, batch_size):
     number of batches, allowing for remainders.'''
     return total_num // batch_size + int(total_num % batch_size != 0)
 
+#inputs :是一个int32的list,每一个int32代表一个词的index
+#idx2token ： index 到word 的映射字典
+#将inputs 转成词并用空格链接，输出string
 def convert_idx_to_token_tensor(inputs, idx2token):
     '''Converts int32 tensor to string tensor.
     inputs: 1d int32 tensor. indices.
@@ -57,6 +62,9 @@ def convert_idx_to_token_tensor(inputs, idx2token):
 #
 #     return arry
 
+#hypotheses :预测的结果，首先转成字符
+#用</s>split ,只保留前一部分
+#用空格替换掉下划线
 def postprocess(hypotheses, idx2token):
     '''Processes translation outputs.
     hypotheses: list of encoded predictions
@@ -128,6 +136,7 @@ def save_variable_specs(fpath):
         fout.write("\n".join(params))
     logging.info("Variables info has been saved.")
 
+
 def get_hypotheses(num_batches, num_samples, sess, tensor, dict):
     '''Gets hypotheses.
     num_batches: scalar.
@@ -140,6 +149,7 @@ def get_hypotheses(num_batches, num_samples, sess, tensor, dict):
     hypotheses: list of sents
     '''
     hypotheses = []
+    #一共有num_batches个batch，每个获取batch里的源语言的翻译，合在一起就是验证集，条数就是num_samples
     for _ in range(num_batches):
         h = sess.run(tensor)
         hypotheses.extend(h.tolist())
@@ -154,12 +164,18 @@ def calc_bleu(ref, translation):
 
     Returns
     translation that the bleu score is appended to'''
+    #使用 multi-bleu.perl 计算bleu得分
+
     get_bleu_score = "perl multi-bleu.perl {} < {} > {}".format(ref, translation, "temp")
+    #通过python os.system 执行终端命令
     os.system(get_bleu_score)
+    #获得bleu_score_report
     bleu_score_report = open("temp", "r").read()
+    #添加到翻译文件的最后变
     with open(translation, "a") as fout:
         fout.write("\n{}".format(bleu_score_report))
     try:
+        #给translation 更改名称，添加bleu得分
         score = re.findall("BLEU = ([^,]+)", bleu_score_report)[0]
         new_translation = translation + "B{}".format(score)
         os.system("mv {} {}".format(translation, new_translation))
