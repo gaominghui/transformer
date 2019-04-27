@@ -41,13 +41,20 @@ class Transformer:
         memory: encoder outputs. (N, T1, d_model)
         '''
         with tf.variable_scope("encoder", reuse=tf.AUTO_REUSE):
+            #x 经过编码后的句子
+            # seqlens :句子长度
+            #sents1:原始句子
+            #对应data_load.py的generator_fn
             x, seqlens, sents1 = xs
 
             # embedding
+            #找到每个词对应的embeding向量,大小是[batch_size,seqlens,d_model]
             enc = tf.nn.embedding_lookup(self.embeddings, x) # (N, T1, d_model)
+            #scale 的意义？
             enc *= self.hp.d_model**0.5 # scale
-
+            #位置编码,maxlen1 = 100 句子的最长长度,位置编码跟句子中词的位置有关，跟词无关
             enc += positional_encoding(enc, self.hp.maxlen1)
+            #dropout
             enc = tf.layers.dropout(enc, self.hp.dropout_rate, training=training)
 
             ## Blocks
@@ -77,12 +84,15 @@ class Transformer:
         sents2: (N,). string.
         '''
         with tf.variable_scope("decoder", reuse=tf.AUTO_REUSE):
+
             decoder_inputs, y, seqlens, sents2 = ys
 
-            # embedding
+            # embedding,同encoder
+            #dec的shape : [batch_size,目标语言句子的长度,512]
             dec = tf.nn.embedding_lookup(self.embeddings, decoder_inputs)  # (N, T2, d_model)
+            #同 encoder
             dec *= self.hp.d_model ** 0.5  # scale
-
+            #position encoding
             dec += positional_encoding(dec, self.hp.maxlen2)
             dec = tf.layers.dropout(dec, self.hp.dropout_rate, training=training)
 
@@ -90,6 +100,8 @@ class Transformer:
             for i in range(self.hp.num_blocks):
                 with tf.variable_scope("num_blocks_{}".format(i), reuse=tf.AUTO_REUSE):
                     # Masked self-attention (Note that causality is True at this time)
+                    #decoder 的  多头 self-attention
+                    #dec 的shape : [batch_size,目标语言句子的长度,512]
                     dec = multihead_attention(queries=dec,
                                               keys=dec,
                                               values=dec,
@@ -100,6 +112,12 @@ class Transformer:
                                               scope="self_attention")
 
                     # Vanilla attention
+                    #encoder-decoder attention
+                    #helps the decoder focus on appropriate places in the input sequence
+                    #encoder-decoder atteion 帮助decoder 部分 找到intpu中对应的部分
+                    #dec 的shape : [batch_size,目标语言句子的长度,512]
+                    #memory的shape : [batch_szie, 源语言句子的长度, 512]
+                    #产出的dec的shape:[batch_size,目标语言句子的长度,512]
                     dec = multihead_attention(queries=dec,
                                               keys=memory,
                                               values=memory,
@@ -109,6 +127,7 @@ class Transformer:
                                               causality=False,
                                               scope="vanilla_attention")
                     ### Feed Forward
+                    #dec shape :[batch_size,目标语言句子的长度,512]
                     dec = ff(dec, num_units=[self.hp.d_ff, self.hp.d_model])
 
         # Final linear projection (embedding weights are shared)

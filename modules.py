@@ -20,14 +20,19 @@ def ln(inputs, epsilon = 1e-8, scope="ln"):
     Returns:
       A tensor with the same shape and data dtype as `inputs`.
     '''
+    #inputs shape :[batch-szie,sen_len,64*8]
+
     with tf.variable_scope(scope, reuse=tf.AUTO_REUSE):
         inputs_shape = inputs.get_shape()
+        #params_shape :[64*8]
         params_shape = inputs_shape[-1:]
     
         mean, variance = tf.nn.moments(inputs, [-1], keep_dims=True)
         beta= tf.get_variable("beta", params_shape, initializer=tf.zeros_initializer())
         gamma = tf.get_variable("gamma", params_shape, initializer=tf.ones_initializer())
+        #正则化
         normalized = (inputs - mean) / ( (variance + epsilon) ** (.5) )
+
         outputs = gamma * normalized + beta
         
     return outputs
@@ -67,12 +72,22 @@ def scaled_dot_product_attention(Q, K, V,
     scope: Optional scope for `variable_scope`.
     '''
     with tf.variable_scope(scope, reuse=tf.AUTO_REUSE):
+        #d_k =64 最后一维的长度是64
+        # Q的纬度是[batch_size,sentencse_length,64]
         d_k = Q.get_shape().as_list()[-1]
 
         # dot product
+
+
+
+
+        #矩阵k置换后才能做矩阵相乘 原始 Q,k:[8*batch_size,sen_len,64]
+        #outputs shape: [8*batch_szie,sen_len,sen_len]
+
         outputs = tf.matmul(Q, tf.transpose(K, [0, 2, 1]))  # (N, T_q, T_k)
 
         # scale
+        #除以8 ，This leads to having more stable gradients#论文解释说可以获得更稳定的梯度
         outputs /= d_k ** 0.5
 
         # key masking
@@ -83,6 +98,8 @@ def scaled_dot_product_attention(Q, K, V,
             outputs = mask(outputs, type="future")
 
         # softmax
+        # this position will have the highest softmax score, but sometimes it’s useful to attend to another word that is relevant to the current word.
+        # 当前word 的得分应该是最高的，但是有时候给其他相关的词适当的注意是有益的
         outputs = tf.nn.softmax(outputs)
         attention = tf.transpose(outputs, [0, 2, 1])
         tf.summary.image("attention", tf.expand_dims(attention[:1], -1))
@@ -94,6 +111,11 @@ def scaled_dot_product_attention(Q, K, V,
         outputs = tf.layers.dropout(outputs, rate=dropout_rate, training=training)
 
         # weighted sum (context vectors)
+        # output shape :[8*batch_szie,sen_len,sen_len]
+        # V shape : [8*batch_size,sen_len,64]
+        # keep intact the values of the word(s) we want to focus on, and drown-out irrelevant words
+        #乘以V的作用是给我们想要关注的词的值不动，而那些无关的词的值越小越好
+        # outputs :(N, T_q, T_k) V:(N,T_K,d_model)
         outputs = tf.matmul(outputs, V)  # (N, T_q, d_v)
 
     return outputs
@@ -173,27 +195,48 @@ def multihead_attention(queries, keys, values,
     scope: Optional scope for `variable_scope`.
         
     Returns
-      A 3d tensor with shape of (N, T_q, C)  
+      A 3d tensor with shape of (N, T_q, C)
+    #attention的计算一共有6步：
+    0.创建Q,K,V
+    1.query * key = step1
+    2.scale
+    3.softmax
+    4.step1 * v
+    5. 归一化
     '''
     d_model = queries.get_shape().as_list()[-1]
+    #d_model = 512
     with tf.variable_scope(scope, reuse=tf.AUTO_REUSE):
         # Linear projections
+        #Q,k,v shape: 跟queries一样 [batch-size,sentence_legngth,d_model]
+        #created by multiplying the embedding by three matrices that we trained during the training process
+        #q,k,v 的创建是通过word-embedding 乘以一个矩阵得到的，这个矩阵是我们在训练过程中需要学习得到的
+        #实际就是一个全连接
         Q = tf.layers.dense(queries, d_model, use_bias=False) # (N, T_q, d_model)
         K = tf.layers.dense(keys, d_model, use_bias=False) # (N, T_k, d_model)
         V = tf.layers.dense(values, d_model, use_bias=False) # (N, T_k, d_model)
         
         # Split and concat
+        #Q_,k_,V_ shape: 都是8=num_heads个tensor 做链接，修改了原始Q的shape:   [batch_size *8,sentence_length, 64] 就是8头，每头64维
+        #与下边的restore shape 对应，这个是改成多头的结构，restore是再改回去
         Q_ = tf.concat(tf.split(Q, num_heads, axis=2), axis=0) # (h*N, T_q, d_model/h)
         K_ = tf.concat(tf.split(K, num_heads, axis=2), axis=0) # (h*N, T_k, d_model/h)
         V_ = tf.concat(tf.split(V, num_heads, axis=2), axis=0) # (h*N, T_k, d_model/h)
 
         # Attention
+        #计算attenion
+
         outputs = scaled_dot_product_attention(Q_, K_, V_, causality, dropout_rate, training)
 
         # Restore shape
+        #原output shape :[8*batch_size,sen_len,64]
+        #restore后 shaep :[batch-szie,sen_len,64*8]
         outputs = tf.concat(tf.split(outputs, num_heads, axis=0), axis=2 ) # (N, T_q, d_model)
-              
+
+
+
         # Residual connection
+        #残差结构
         outputs += queries
               
         # Normalize
@@ -211,17 +254,22 @@ def ff(inputs, num_units, scope="positionwise_feedforward"):
     Returns:
       A 3d tensor with the same shape and dtype as inputs
     '''
+    #num_units :[2048,512]
+    #intpus:[batch-size,sen_len,512]
+
     with tf.variable_scope(scope, reuse=tf.AUTO_REUSE):
         # Inner layer
+        #outputs:[batch_size,sen_len,2048]
         outputs = tf.layers.dense(inputs, num_units[0], activation=tf.nn.relu)
-
+        #outputs:[batch_size,sen_len,512]
         # Outer layer
         outputs = tf.layers.dense(outputs, num_units[1])
-
+        #残差链接
         # Residual connection
         outputs += inputs
         
         # Normalize
+        #layer normalization
         outputs = ln(outputs)
     
     return outputs
@@ -274,14 +322,20 @@ def positional_encoding(inputs,
     returns
     3d tensor that has the same shape as inputs.
     '''
+    #位置编码的计算跟具体的字无关，只跟位置有关
 
-    E = inputs.get_shape().as_list()[-1] # static
-    N, T = tf.shape(inputs)[0], tf.shape(inputs)[1] # dynamic
+    E = inputs.get_shape().as_list()[-1] # static，词向量长度512
+    N, T = tf.shape(inputs)[0], tf.shape(inputs)[1] # dynamic ，batch_size,句子长度
     with tf.variable_scope(scope, reuse=tf.AUTO_REUSE):
         # position indices
+        #每一个
         position_ind = tf.tile(tf.expand_dims(tf.range(T), 0), [N, 1]) # (N, T)
 
         # First part of the PE function: sin and cos argument
+        #计算全局的possition encodeing [max_len,d_model]
+        #max_len：句子的最长长度
+        #d_model: 词向量的长度
+        #
         position_enc = np.array([
             [pos / np.power(10000, (i-i%2)/E) for i in range(E)]
             for pos in range(maxlen)])
@@ -296,6 +350,7 @@ def positional_encoding(inputs,
 
         # masks
         if masking:
+            #intputs中等于0的位置不变，不等于0的部分用outputs代替
             outputs = tf.where(tf.equal(inputs, 0), inputs, outputs)
 
         return tf.to_float(outputs)
