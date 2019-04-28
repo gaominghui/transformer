@@ -123,15 +123,15 @@ download.sh  &rarr; prepo.py  &rarr; data_load.py &rarr; train.py  &rarr; test.p
 
 # 2模型讲解
 主要有两个文件model.py和modules.py  
-####model.py
-#####\__init\__   
+#### model.py
+##### \__init\__   
 transformer模型到构造文件,有如下若干个变量  
 + hp 超参数文件，学习率，batch_size,num_epochs等
 + token2idx word到index的映射
 + idx2token index到word的映射
 + embeddings shape : [vacal_szie,d_model]  vacal_szie:词典大小 d_model 词向量维度
 
-#####encode  
+##### encode  
 1.embedding_lookup 为每个句子找到对应的隐向量[batch_size,T1] &rarr;[batch_size,T1,d_model]
 T1:源语言句子长度 d_model: 词向量维度 batch_size:句子个数  
 2.scale 论文中好像没有这个，不是特别清楚scale的作用
@@ -151,7 +151,7 @@ T1:源语言句子长度 d_model: 词向量维度 batch_size:句子个数
 4.2 position-wise feed forward net
 三层的全连接网络，含有残差结构
 
-#####decode  
+##### decode  
 1.embedding_lookup 同encode  
 2.scale   同encode  
 3.position_encoding 同encode  
@@ -160,7 +160,7 @@ T1:源语言句子长度 d_model: 词向量维度 batch_size:句子个数
 4.2 多头 encoder-decoder-attention  
 与self attention 不同的地方在于 k,v是encocer的输出  
 4.3 position-wise feed forward net 
-#####train
+##### train
 训练模型
 执行encode  
 执行decode  
@@ -171,14 +171,14 @@ T1:源语言句子长度 d_model: 词向量维度 batch_size:句子个数
 定义优化器  
 定义学习率  
 定义train_operation 优化器最优化loss
-#####eval
+##### eval
 评估模型
 读入目标语言的句子时，将其替换为零向量，因为这个是做预测的  
 然后逐字预测
 这个跟mask方法有较大关系，目前还不是特别明白
 
-####modules.py
-#####ln
+#### modules.py
+##### ln
 layer normalization函数，减去均值，除以标准差
 get_token_embeddings 获取word_embedding词典
 scaled_dot_product_attention 计算attention的辅助函数
