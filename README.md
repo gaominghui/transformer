@@ -125,7 +125,7 @@ download.sh  &rarr; prepo.py  &rarr; data_load.py &rarr; train.py  &rarr; test.p
 主要有两个文件model.py和modules.py  
 #### model.py
 ##### \__init\__   
-transformer模型到构造文件,有如下若干个变量  
+transformer模型的构造文件,有如下若干个变量  
 + hp 超参数文件，学习率，batch_size,num_epochs等
 + token2idx word到index的映射
 + idx2token index到word的映射
@@ -134,10 +134,10 @@ transformer模型到构造文件,有如下若干个变量
 ##### encode  
 1.embedding_lookup 为每个句子找到对应的隐向量[batch_size,T1] &rarr;[batch_size,T1,d_model]
 T1:源语言句子长度 d_model: 词向量维度 batch_size:句子个数  
-2.scale 论文中好像没有这个，不是特别清楚scale的作用
+2.scale 论文中好像没有这个，不是特别清楚scale的作用  
 3.position_encoding
 位置编码的计算只跟位置有关，而且这个可以做成类似于字典文件，只需计算一次，而不是每次都计算，
-因为positon_encoding，计算的是最大长度的位置编码，然后通过embedding_lookup找对应位置的编码
+因为positon_encoding，计算的是最大长度的位置编码，然后通过embedding_lookup找对应位置的编码  
 4.encode_blocks,循环num_blocks次   
 4.1 多头self-attention
 + 初始化Q,K,V 通过全连接计算 Q[batch_size,Tq,d_model] K[batch_size,Tk,d_model] V[batch_size,Tk,d_model] 
@@ -146,8 +146,7 @@ T1:源语言句子长度 d_model: 词向量维度 batch_size:句子个数
 + Z shape 转换： [batch_size,Tq,d_model]
 + 残差结构：Z+ Q
 + 多头attention的物理含义的理解:  softmax( scale(Q*K) )找与Q最相似的K,再乘以K,表示用k向量来表示Q向量，V向量好像有点冗余？
-而多头的含义是两个较长的向量计算相似度往往不会很相似，拆成若干个子向量计算，会相似的概率会提升不少
-+ 论文中说多头从两方面提升了模型的效果：
+而多头的含义是两个较长的向量计算相似度往往不会很相似，拆成若干个子向量计算，会相似的概率会提升不少  
 4.2 position-wise feed forward net
 三层的全连接网络，含有残差结构
 
@@ -179,12 +178,12 @@ T1:源语言句子长度 d_model: 词向量维度 batch_size:句子个数
 
 #### modules.py
 ##### ln
-layer normalization函数，减去均值，除以标准差
-get_token_embeddings 获取word_embedding词典
-scaled_dot_product_attention 计算attention的辅助函数
-mask 还不是很明白
-multihead_attention 多头attention
-ff feed-forward network encode和decode中会用到
-label_smoothing 将index 转换成one-hot形式，然后做平滑,0变成一个略微比0大的值，1变成一个略微比1小的值
-positional_encoding 位置编码
+layer normalization函数，减去均值，除以标准差  
+get_token_embeddings 获取word_embedding词典  
+scaled_dot_product_attention 计算attention的辅助函数  
+mask 还不是很明白  
+multihead_attention 多头attention  
+ff feed-forward network encode和decode中会用到  
+label_smoothing 将index 转换成one-hot形式，然后做平滑,0变成一个略微比0大的值，1变成一个略微比1小的值  
+positional_encoding 位置编码  
 noam_scheme 学习率的变化由小到大，再由大到小
