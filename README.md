@@ -85,21 +85,21 @@ python test.py --ckpt log/1/iwslt2016_E17L2.78-26078 (OR yourCkptFile OR yourCkp
 * I'm going to update the code when TF2.0 comes out if possible.
 
 
-#1流程讲解
+# 1流程讲解
 文件阅读顺序：
 download.sh  &rarr; prepo.py  &rarr; data_load.py &rarr; train.py  &rarr; test.py
 
 参数文件和工具文件分别是 hparams.py 和 utils.py  
-####download.sh  
+#### download.sh  
 1.新建路径  
 2.下载训练文件  
 3.解压`数据会写到iwslt2016/de-en`       
-####prepo.py   
+#### prepo.py   
 1.根据不同数据集的格式，使用不同的正则清洗和读入数据  
 2.将1清洗后的数据写回到磁盘  `数据会写到iwslt2016/prepro`  
 3.使用goolge开源的sentencepiece 训练源语言和目标语言的训练的合集，得到模型文件和词典文件  
 4.使用3中的模型和词典文件，将所有数据集转换，并写回到磁盘`数据会写到iwslt2016/segmented`    
-####data_load.py   
+#### data_load.py   
 1.载入字典，生成word &rarr; index的映射，index &rarr; word的映射  
 2.过滤超过一定长度的句子  
 3.转换原始句子为index, [word1,word2......] &rarr;[index1,index2......]  
@@ -110,18 +110,18 @@ download.sh  &rarr; prepo.py  &rarr; data_load.py &rarr; train.py  &rarr; test.p
 
 + 为了保证每个batch里句子的长度一样，使用了padded_batch 方法，该方法会让同一个batch里所有
 句子后边加入适当的0，来保证跟最长的句子一样长。而不同batch里句子长度不一定相同。
-####train.py
+#### train.py
 1.初始化数据，初始化模型，定义各种计算所需的operation  
 2.初始化checkpoint,summary  
 3.以一个batch为单位，进行训练，每个epoch ,也就是整个训练集训练一遍，做一次eval  
 4.eval的时候 计算训练集的loss, 计算验证集的bleu，并将结果写回到磁盘。
 
-###test.py
+### test.py
 1.初始化预测及，初始化模型，定义各种计算所需的operation  
 2.通过checkpoint load session和模型  
 3.同train.py中做验证一样仍然用model中的eval作预测，并计算bleu
 
-#2模型讲解
+# 2模型讲解
 主要有两个文件model.py和modules.py  
 ####model.py
 #####\__init\__   
