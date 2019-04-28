@@ -212,6 +212,7 @@ def multihead_attention(queries, keys, values,
         #created by multiplying the embedding by three matrices that we trained during the training process
         #q,k,v 的创建是通过word-embedding 乘以一个矩阵得到的，这个矩阵是我们在训练过程中需要学习得到的
         #实际就是一个全连接
+
         Q = tf.layers.dense(queries, d_model, use_bias=False) # (N, T_q, d_model)
         K = tf.layers.dense(keys, d_model, use_bias=False) # (N, T_k, d_model)
         V = tf.layers.dense(values, d_model, use_bias=False) # (N, T_k, d_model)
