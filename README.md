@@ -177,13 +177,21 @@ T1:源语言句子长度 d_model: 词向量维度 batch_size:句子个数
 这个跟mask方法有较大关系，目前还不是特别明白
 
 #### modules.py
-##### ln
-layer normalization函数，减去均值，除以标准差  
-get_token_embeddings 获取word_embedding词典  
-scaled_dot_product_attention 计算attention的辅助函数  
+##### ln 
+layer normalization函数，减去均值，除以标准差
+##### get_token_embeddings  
+ 获取word_embedding词典  
+##### scaled_dot_product_attention 
+ 计算attention的辅助函数  
+##### mask 
 mask 还不是很明白  
-multihead_attention 多头attention  
-ff feed-forward network encode和decode中会用到  
-label_smoothing 将index 转换成one-hot形式，然后做平滑,0变成一个略微比0大的值，1变成一个略微比1小的值  
-positional_encoding 位置编码  
-noam_scheme 学习率的变化由小到大，再由大到小
+##### multihead_attention 
+ 多头attention  
+##### ff
+ feed-forward network encode和decode中会用到  
+##### label_smoothing
+ 将index 转换成one-hot形式，然后做平滑,0变成一个略微比0大的值，1变成一个略微比1小的值  
+#####positional_encoding
+positional_encoding 位置编码 
+##### noam_scheme
+ 学习率的变化由小到大，再由大到小
