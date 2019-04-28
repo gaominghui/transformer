@@ -284,7 +284,7 @@ def label_smoothing(inputs, epsilon=0.1):
     ```
     import tensorflow as tf
     inputs = tf.convert_to_tensor([[[0, 0, 1], 
-       [0, 1, 0],
+       [0, 1, 0],u
        [1, 0, 0]],
 
       [[1, 0, 0],

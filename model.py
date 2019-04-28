@@ -132,7 +132,11 @@ class Transformer:
 
         # Final linear projection (embedding weights are shared)
         weights = tf.transpose(self.embeddings) # (d_model, vocab_size)
+        #dec shape :[batch_size,senten_len,d_model]
+        #weghts : [word_size,d_model] ，转置后 [d_model, word_size]
+        #logits : [batch_size,senten_len,word_size]
         logits = tf.einsum('ntd,dk->ntk', dec, weights) # (N, T2, vocab_size)
+        #y_hat : [batch-size, senten_len]
         y_hat = tf.to_int32(tf.argmax(logits, axis=-1))
 
         return logits, y_hat, y, sents2
@@ -146,16 +150,29 @@ class Transformer:
         summaries: training summary node
         '''
         # forward
+        #encode step
         memory, sents1 = self.encode(xs)
+        #decode step
         logits, preds, y, sents2 = self.decode(ys, memory)
 
         # train scheme
+        #y shape :[batch_size,senten_length]
+        #label_smoothing 将onehot值变成了连续的float值
         y_ = label_smoothing(tf.one_hot(y, depth=self.hp.vocab_size))
+        #y_ [batch_szie,senten_length,vocab_szie]
+        #logits : [batch-szie,senten_length,vocab_szie]
+        #ce :[batch_size,senten_length]
         ce = tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits, labels=y_)
+        # tf.not_equal 返回逐个元素的布尔值 tf.to_float 将其转化成0,1
+        #nopadding :[batch_szie,senten_length]
         nonpadding = tf.to_float(tf.not_equal(y, self.token2idx["<pad>"]))  # 0: <pad>
+        #ce : [batch-szie,senten_length]
+        #nopadding :[batch-szie,senten_length]
+        #reduce_sum :不添加参数的话，会逐个元素累加获得一个数值。
         loss = tf.reduce_sum(ce * nonpadding) / (tf.reduce_sum(nonpadding) + 1e-7)
 
         global_step = tf.train.get_or_create_global_step()
+        #noam_scheme 会影响学习率，由小变大，再由大变小
         lr = noam_scheme(self.hp.lr, global_step, self.hp.warmup_steps)
         optimizer = tf.train.AdamOptimizer(lr)
         train_op = optimizer.minimize(loss, global_step=global_step)
@@ -174,25 +191,37 @@ class Transformer:
         Returns
         y_hat: (N, T2)
         '''
+        #docder_inputs shape :[batch_size,senten_length]
         decoder_inputs, y, y_seqlen, sents2 = ys
-
+        #xs[0]  shape :[batch_szie,senten_length]
+        #decoder_inputs shape: [batch_size,1]  且均为0
         decoder_inputs = tf.ones((tf.shape(xs[0])[0], 1), tf.int32) * self.token2idx["<s>"]
         ys = (decoder_inputs, y, y_seqlen, sents2)
 
         memory, sents1 = self.encode(xs, False)
 
         logging.info("Inference graph is being built. Please be patient.")
+        #预测
         for _ in tqdm(range(self.hp.maxlen2)):
+            #
             logits, y_hat, y, sents2 = self.decode(ys, memory, False)
+            #y_hat : [batch_size, senten_len] 其中的元素是翻译的词对应的index
+
             if tf.reduce_sum(y_hat, 1) == self.token2idx["<pad>"]: break
 
             _decoder_inputs = tf.concat((decoder_inputs, y_hat), 1)
             ys = (_decoder_inputs, y, y_seqlen, sents2)
 
         # monitor a random sample
+        #监控一个eval值
+        #tensorflow.random_unifrom 第一个参数是shape, 不填的话是一个数
+        #第二个参数是下限，第三个参数是上限，第四个参数类型
         n = tf.random_uniform((), 0, tf.shape(y_hat)[0]-1, tf.int32)
+        #sent1 原始数据
         sent1 = sents1[n]
+        #pred将
         pred = convert_idx_to_token_tensor(y_hat[n], self.idx2token)
+        #sent2 预测数据
         sent2 = sents2[n]
 
         tf.summary.text("sent1", sent1)
