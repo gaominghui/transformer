@@ -191,7 +191,7 @@ mask 还不是很明白
  feed-forward network encode和decode中会用到  
 ##### label_smoothing
  将index 转换成one-hot形式，然后做平滑,0变成一个略微比0大的值，1变成一个略微比1小的值  
-#####positional_encoding
+##### positional_encoding
 positional_encoding 位置编码 
 ##### noam_scheme
  学习率的变化由小到大，再由大到小
