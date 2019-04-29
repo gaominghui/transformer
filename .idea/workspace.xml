@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="af814a4e-ea78-46c7-bda0-e5c17b63848d" name="Default Changelist" comment="" />
+    <list default="true" id="af814a4e-ea78-46c7-bda0-e5c17b63848d" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -12,13 +14,14 @@
     <session id="902562608">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="3" />
+          <entry key="project.closed" value="4" />
           <entry key="project.open.time.0" value="2" />
           <entry key="project.open.time.1" value="1" />
           <entry key="project.open.time.18" value="1" />
+          <entry key="project.open.time.3" value="1" />
           <entry key="project.open.time.5" value="1" />
           <entry key="project.open.time.6" value="1" />
-          <entry key="project.opened" value="6" />
+          <entry key="project.opened" value="7" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -29,9 +32,9 @@
           <entry key="de" value="7" />
           <entry key="en" value="9" />
           <entry key="md" value="4" />
-          <entry key="perl" value="2" />
+          <entry key="perl" value="3" />
           <entry key="png" value="2" />
-          <entry key="py" value="64" />
+          <entry key="py" value="66" />
           <entry key="sh" value="3" />
           <entry key="train" value="2" />
           <entry key="tsv" value="4" />
@@ -44,31 +47,31 @@
         <counts>
           <entry key="Image" value="2" />
           <entry key="Markdown" value="4" />
-          <entry key="PLAIN_TEXT" value="70" />
-          <entry key="Python" value="64" />
+          <entry key="PLAIN_TEXT" value="71" />
+          <entry key="Python" value="66" />
           <entry key="XML" value="3" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="md" value="3790" />
+          <entry key="md" value="3792" />
           <entry key="py" value="7324" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Markdown" value="3790" />
+          <entry key="Markdown" value="3792" />
           <entry key="Python" value="7324" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="202">
+            <state relative-caret-position="1700">
               <caret line="100" column="87" selection-start-line="100" selection-start-column="82" selection-end-line="100" selection-end-column="87" />
               <folding>
                 <element signature="e#149#172#0" expanded="true" />
@@ -80,7 +83,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="244">
+            <state relative-caret-position="3502">
               <caret line="206" column="25" selection-start-line="206" selection-start-column="20" selection-end-line="206" selection-end-column="25" />
               <folding>
                 <element signature="e#171#194#0" expanded="true" />
@@ -92,7 +95,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/modules.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="542">
+            <state relative-caret-position="6069">
               <caret line="358" column="15" selection-start-line="358" selection-start-column="4" selection-end-line="358" selection-end-column="15" />
             </state>
           </provider>
@@ -102,20 +105,20 @@
         <entry file="file://$PROJECT_DIR$/codeReading.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="270">
-                <caret line="109" lean-forward="true" selection-end-line="136" />
+              <first_editor relative-caret-position="246">
+                <caret line="111" selection-start-line="111" selection-end-line="111" />
               </first_editor>
               <second_editor />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="193">
-                <caret line="190" lean-forward="true" selection-start-line="190" selection-end-line="190" />
+              <first_editor relative-caret-position="1462">
+                <caret line="86" selection-start-line="86" selection-end-line="86" />
               </first_editor>
               <second_editor />
             </state>
@@ -125,8 +128,41 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/hparams.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="326">
-              <caret line="40" column="37" selection-start-line="40" selection-start-column="31" selection-end-line="40" selection-end-column="37" />
+            <state relative-caret-position="372">
+              <caret line="41" column="64" lean-forward="true" selection-end-line="59" selection-end-column="78" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/utils.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="427">
+              <caret line="152" column="32" lean-forward="true" selection-start-line="152" selection-start-column="32" selection-end-line="152" selection-end-column="32" />
+              <folding>
+                <element signature="e#171#194#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/multi-bleu.perl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="768">
+              <caret line="156" column="9" lean-forward="true" selection-start-line="156" selection-start-column="9" selection-end-line="156" selection-end-column="9" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/prepro.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-126">
+              <caret line="32" column="23" lean-forward="true" selection-start-line="32" selection-start-column="23" selection-end-line="32" selection-end-column="23" />
+              <folding>
+                <element signature="e#188#197#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -190,8 +226,8 @@
         <option value="$PROJECT_DIR$/train.py" />
         <option value="$PROJECT_DIR$/modules.py" />
         <option value="$PROJECT_DIR$/model.py" />
-        <option value="$PROJECT_DIR$/codeReading.md" />
         <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/codeReading.md" />
       </list>
     </option>
   </component>
@@ -210,23 +246,6 @@
             <path>
               <item name="transformer" type="b2602c69:ProjectViewProjectNode" />
               <item name="transformer" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="transformer" type="b2602c69:ProjectViewProjectNode" />
-              <item name="transformer" type="462c0819:PsiDirectoryNode" />
-              <item name="iwslt2016" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="transformer" type="b2602c69:ProjectViewProjectNode" />
-              <item name="transformer" type="462c0819:PsiDirectoryNode" />
-              <item name="iwslt2016" type="462c0819:PsiDirectoryNode" />
-              <item name="prepro" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="transformer" type="b2602c69:ProjectViewProjectNode" />
-              <item name="transformer" type="462c0819:PsiDirectoryNode" />
-              <item name="iwslt2016" type="462c0819:PsiDirectoryNode" />
-              <item name="segmented" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="transformer" type="b2602c69:ProjectViewProjectNode" />
@@ -356,8 +375,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24383369" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24383369" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -368,7 +388,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32891566" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32891566" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="8" visible="true" weight="0.51686746" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.51686746" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Python Console" order="10" weight="0.32891566" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -532,9 +552,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="226">
           <caret line="85" column="32" selection-start-line="85" selection-start-column="32" selection-end-line="85" selection-end-column="32" />
-          <folding>
-            <element signature="e#57#66#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -580,13 +597,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/multi-bleu.perl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2652">
-          <caret line="156" column="9" lean-forward="true" selection-start-line="156" selection-start-column="9" selection-end-line="156" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/iwslt2016/prepro/train">
       <provider selected="true" editor-type-id="LargeFileEditor">
         <state relative-caret-position="238">
@@ -618,23 +628,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/prepro.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="338">
-          <caret line="104" lean-forward="true" selection-start-line="104" selection-end-line="104" />
-          <folding>
-            <element signature="e#188#197#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/data_load.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="608">
           <caret line="137" column="34" selection-start-line="137" selection-start-column="22" selection-end-line="137" selection-end-column="34" />
-          <folding>
-            <element signature="e#339#362#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -652,19 +649,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="444">
-          <caret line="153" column="27" selection-start-line="153" selection-start-column="21" selection-end-line="153" selection-end-column="27" />
-          <folding>
-            <element signature="e#171#194#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="202">
+        <state relative-caret-position="1700">
           <caret line="100" column="87" selection-start-line="100" selection-start-column="82" selection-end-line="100" selection-end-column="87" />
           <folding>
             <element signature="e#149#172#0" expanded="true" />
@@ -674,7 +661,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="244">
+        <state relative-caret-position="3502">
           <caret line="206" column="25" selection-start-line="206" selection-start-column="20" selection-end-line="206" selection-end-column="25" />
           <folding>
             <element signature="e#171#194#0" expanded="true" />
@@ -682,37 +669,64 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/hparams.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="326">
-          <caret line="40" column="37" selection-start-line="40" selection-start-column="31" selection-end-line="40" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/modules.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="542">
+        <state relative-caret-position="6069">
           <caret line="358" column="15" selection-start-line="358" selection-start-column="4" selection-end-line="358" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/codeReading.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="270">
-            <caret line="109" lean-forward="true" selection-end-line="136" />
-          </first_editor>
-          <second_editor />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="193">
-            <caret line="190" lean-forward="true" selection-start-line="190" selection-end-line="190" />
+          <first_editor relative-caret-position="1462">
+            <caret line="86" selection-start-line="86" selection-end-line="86" />
           </first_editor>
           <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/codeReading.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="246">
+            <caret line="111" selection-start-line="111" selection-end-line="111" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hparams.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="372">
+          <caret line="41" column="64" lean-forward="true" selection-end-line="59" selection-end-column="78" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="427">
+          <caret line="152" column="32" lean-forward="true" selection-start-line="152" selection-start-column="32" selection-end-line="152" selection-end-column="32" />
+          <folding>
+            <element signature="e#171#194#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/multi-bleu.perl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="768">
+          <caret line="156" column="9" lean-forward="true" selection-start-line="156" selection-start-column="9" selection-end-line="156" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/prepro.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-126">
+          <caret line="32" column="23" lean-forward="true" selection-start-line="32" selection-start-column="23" selection-end-line="32" selection-end-column="23" />
+          <folding>
+            <element signature="e#188#197#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
