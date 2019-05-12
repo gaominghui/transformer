@@ -29,6 +29,29 @@ class Transformer:
         y_seqlen: int32 tensor. (N, )
         sents2: str tensor. (N,)
     training: boolean.
+    Transformer中两个关键的指示表示，training和causality
+    training
+    --------------------
+    |     |encode|decode|
+     --------------------
+    | train| true|true  |
+     --------------------
+    |  test| false|false|
+     --------------------
+
+    training用来指示dropout的模式，为true表示训练模式，false表示推断模式。
+     causality
+    --------------------
+    |     |encode|decode|
+     --------------------
+    | train| false|true |
+     --------------------
+    |  test| false|true|
+     --------------------
+     causalit用来指示mask的模式，当在encode的过程中，可以考虑上下文的信息，
+     当在decode的过程中，只可以考虑上文的信息，不能考虑下文的信息。
+
+
     '''
     def __init__(self, hp):
         self.hp = hp

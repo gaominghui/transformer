@@ -94,6 +94,8 @@ def scaled_dot_product_attention(Q, K, V,
         outputs = mask(outputs, Q, K, type="key")
 
         # causality or future blinding masking
+        #在decode部分，智能考虑上文信息，不能考虑下文信息，会把下文的信息标志成一个负无穷大的数
+        #然后在softmax的时候为0，使其不考虑下文信息。
         if causality:
             outputs = mask(outputs, type="future")
 
@@ -167,6 +169,7 @@ def mask(inputs, queries=None, keys=None, type=None):
         outputs = inputs*masks
     elif type in ("f", "future", "right"):
         diag_vals = tf.ones_like(inputs[0, :, :])  # (T_q, T_k)
+        #LinearOperatorLowerTriangular 使得大于index的后边全部置0
         tril = tf.linalg.LinearOperatorLowerTriangular(diag_vals).to_dense()  # (T_q, T_k)
         masks = tf.tile(tf.expand_dims(tril, 0), [tf.shape(inputs)[0], 1, 1])  # (N, T_q, T_k)
 
