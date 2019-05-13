@@ -7,7 +7,7 @@ import sys
 import xlrd
 reload(sys)
 sys.setdefaultencoding('utf8')
-
+import unicodedata
 import jieba
 
 
@@ -136,8 +136,10 @@ def filter_process(files):
     pro_f.close()
 
 
-
+import requests
+from bs4 import BeautifulSoup
 if __name__ =='__main__':
-    files = ['abc_new.txt','data.txt','short_data.txt','sjfj30000.txt','zuozhuan.txt','庄子数据4537句对.xlsx']
-    filter_process(files)
-
+    ret = requests.get('https://hanyu.baidu.com/s?wd=亟&from=zici')
+    soup = BeautifulSoup(ret.text)
+    div = soup.find(name='div', id='pinyin')
+    li_list = div.find_all(name='b')
